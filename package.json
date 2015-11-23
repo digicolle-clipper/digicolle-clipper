@@ -2,14 +2,14 @@
   "name": "digicolle-clipper",
   "version": "1.0.0",
   "description": "",
-  "main": "bootstraper.js",
+  "main": "bootstrapper.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel": "*",
+    "babel-core": "*",
     "react": "*",
     "domready": "*"
   }

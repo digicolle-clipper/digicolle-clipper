@@ -5,6 +5,11 @@ var BrowserWindow = require('browser-window');
 var fs = require('fs');
 var ipcMain = require('electron').ipcMain;
 var screenshot = require('electron-screenshot');
+var AWS = require('aws-sdk');
+var settings = require('./settings');
+AWS.config.accessKeyId = settings.aws_key;
+AWS.config.secretAccessKey = settings.aws_secret;
+var currentURL = null;
 
 require('crash-reporter').start();
 var mainWindow = null;
@@ -28,8 +33,11 @@ app.on('ready', function () {
 });
 
 ipcMain.on('asynchronous-message', function (event, arg) {
-	switch (arg) {
+	var data = JSON.parse(arg);
+	console.log(data);
+	switch (data.type) {
 		case "showclip":
+			currentURL = data.url;
 			const Screen = require('screen')
 			const size = Screen.getPrimaryDisplay().size
 			clipWindow = new BrowserWindow({
@@ -53,12 +61,20 @@ ipcMain.on('asynchronous-message', function (event, arg) {
 			break;
 		default:
 			clipWindow.close();
-			var rect = JSON.parse(arg);
+			if(!/^http:\/\/dl.ndl.go.jp\/info:ndljp\/pid\//.test(currentURL)) return;
+			var id = currentURL.split('/').pop();
+			var rect = data.rect;
 			var windowPosition = mainWindow.getPosition();
 			rect.x -= windowPosition[0];
 			rect.y -= windowPosition[1];
 			setTimeout(function () {
 				mainWindow.capturePage(rect, function(img) {
+					var upload = new AWS.S3.ManagedUpload({
+						params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
+					});
+					upload.send(function(err, data) {
+						console.log(err, data);
+					});
 					fs.writeFile("test.png", img.toPng(), null)
 				})
 			}, 0)

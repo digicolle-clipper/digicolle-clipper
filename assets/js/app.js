@@ -48,8 +48,8 @@ const App = React.createClass({
         })
       },
       onMouseUp: function (e) {
-        console.log(JSON.stringify(self.state.rect))
-        ipcRenderer.send('asynchronous-message', JSON.stringify(self.state.rect));
+				var message = {type:'rect', rect:self.state.rect}
+        ipcRenderer.send('asynchronous-message', JSON.stringify(message));
         self.setState({ cropping: false, rect: {} })
       },
       onMouseDown: function (e) {

@@ -1,4 +1,5 @@
 var ipcRenderer = require('electron').ipcRenderer;
 function clip() {
-	ipcRenderer.send('asynchronous-message', 'showclip');
+	var url = document.getElementById('webview').getURL();
+	ipcRenderer.send('asynchronous-message', '{"type":"showclip","url":"' + url + '"}');
 }

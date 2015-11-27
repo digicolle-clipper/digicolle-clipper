@@ -11,6 +11,8 @@
   "dependencies": {
     "babel-core": "*",
     "react": "*",
-    "domready": "*"
+    "domready": "*",
+    "electron-screenshot": "*",
+    "aws-sdk": "*"
   }
 }

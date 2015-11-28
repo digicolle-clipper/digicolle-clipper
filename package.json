@@ -16,6 +16,7 @@
     "aws-sdk": "*"
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.35.1"
+    "electron-prebuilt": "^0.35.1",
+    "eslint": "^1.10.2"
   }
 }

@@ -31,52 +31,49 @@ app.on('ready', function () {
   });
 });
 
-ipcMain.on('asynchronous-message', function (event, arg) {
-  var data = JSON.parse(arg);
-  console.log(data);
-  switch (data.type) {
-  case "showclip":
-    currentURL = data.url;
-    const Screen = require('screen');
-    const size = Screen.getPrimaryDisplay().size;
-    clipWindow = new BrowserWindow({
-      left: 0,
-      top: 0,
-      width: size.width,
-      height: size.height,
-      frame: false,
-      show: true,
-      transparent: true,
-      resizable: false,
-      'always-on-top': true
-    });
+ipcMain.on('clipstart', function(e, message) {
+  var data = JSON.parse(message);
+  currentURL = data.url;
+  const Screen = require('screen');
+  const size = Screen.getPrimaryDisplay().size;
+  clipWindow = new BrowserWindow({
+    left: 0,
+    top: 0,
+    width: size.width,
+    height: size.height,
+    frame: false,
+    show: true,
+    transparent: true,
+    resizable: false,
+    'always-on-top': true
+  });
 
-    clipWindow.maximize();
+  clipWindow.maximize();
 
-    clipWindow.loadURL(`file://${__dirname}/clip.html`);
-    clipWindow.on('closed', function () {
-      clipWindow = null;
-    });
-    break;
-  default:
-    clipWindow.close();
-    if(!/^http:\/\/dl.ndl.go.jp\/info:ndljp\/pid\//.test(currentURL)) return;
-    var id = currentURL.split('/').pop();
-    var rect = data.rect;
-    var windowPosition = mainWindow.getPosition();
-    rect.x -= windowPosition[0];
-    rect.y -= windowPosition[1];
-    setTimeout(function () {
-      mainWindow.capturePage(rect, function(img) {
-        var upload = new AWS.S3.ManagedUpload({
-          params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
-        });
-        upload.send(function(err, data) {
-          console.log(err, data);
-        });
-        fs.writeFile("test.png", img.toPng(), null);
+  clipWindow.loadURL(`file://${__dirname}/clip.html`);
+  clipWindow.on('closed', function () {
+    clipWindow = null;
+  });
+});
+
+ipcMain.on('clipend', function(e, message) {
+  var data = JSON.parse(message);
+  clipWindow.close();
+  if(!/^http:\/\/dl.ndl.go.jp\/info:ndljp\/pid\//.test(currentURL)) return;
+  var id = currentURL.split('/').pop();
+  var rect = data.rect;
+  var windowPosition = mainWindow.getPosition();
+  rect.x -= windowPosition[0];
+  rect.y -= windowPosition[1];
+  setTimeout(function () {
+    mainWindow.capturePage(rect, function(img) {
+      var upload = new AWS.S3.ManagedUpload({
+        params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
       });
-    }, 0);
-    break;
-  }
+      upload.send(function(err, data) {
+        console.log(err, data);
+      });
+      fs.writeFile("test.png", img.toPng(), null);
+    });
+  }, 0);
 });

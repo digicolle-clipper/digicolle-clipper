@@ -49,7 +49,7 @@ const App = React.createClass({
       },
       onMouseUp: function() {
         var message = {type:'rect', rect:self.state.rect};
-        ipcRenderer.send('asynchronous-message', JSON.stringify(message));
+        ipcRenderer.send('clipend', JSON.stringify(message));
         self.setState({ cropping: false, rect: {} });
       },
       onMouseDown: function(e) {

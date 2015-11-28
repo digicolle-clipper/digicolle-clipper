@@ -5,7 +5,9 @@ var BrowserWindow = require('browser-window');
 var fs = require('fs');
 var ipcMain = require('electron').ipcMain;
 var screenshot = require('electron-screenshot');
+var request = require('request');
 var AWS = require('aws-sdk');
+
 var settings = require('./settings');
 AWS.config.accessKeyId = settings.aws_key;
 AWS.config.secretAccessKey = settings.aws_secret;
@@ -73,7 +75,8 @@ ipcMain.on('asynchronous-message', function (event, arg) {
 						params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
 					});
 					upload.send(function(err, data) {
-						console.log(err, data);
+						if(err) return;
+						request.post(settings.endpoint + '/upload').form({ndl_id: id, photo: data.Location})
 					});
 					fs.writeFile("test.png", img.toPng(), null)
 				})

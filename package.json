@@ -13,6 +13,7 @@
     "react": "*",
     "domready": "*",
     "electron-screenshot": "*",
-    "aws-sdk": "*"
+    "aws-sdk": "*",
+    "request": "*"
   }
 }

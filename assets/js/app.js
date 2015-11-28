@@ -1,31 +1,31 @@
-'use strict'
+'use strict';
 
 const ipcRenderer = require('electron').ipcRenderer;
-const domready = require('domready')
-const React = require('react')
+const domready = require('domready');
+const React = require('react');
 
-function createRect (a, b) {
+function createRect(a, b) {
   return {
     x: Math.min(a.x, b.x),
     y: Math.min(a.y, b.y),
     width: Math.abs(a.x - b.x),
     height: Math.abs(a.y - b.y)
-  }
+  };
 }
 
 const App = React.createClass({
-  getInitialState: function () {
+  getInitialState: function() {
     return {
       x: 0,
       y: 0,
       cropping: false,
       downPoint: {},
       rect: {}
-    }
+    };
   },
 
-  render: function () {
-    const self = this
+  render: function() {
+    const self = this;
 
     return React.DOM.div({
       className: 'window',
@@ -33,9 +33,9 @@ const App = React.createClass({
         self.setState({
           x: e.clientX,
           y: e.clientY
-        })
+        });
 
-        if (!self.state.cropping) return
+        if (!self.state.cropping) return;
 
         self.setState({
           rect: createRect(
@@ -45,15 +45,15 @@ const App = React.createClass({
               y: e.clientY
             }
           )
-        })
+        });
       },
-      onMouseUp: function (e) {
-				var message = {type:'rect', rect:self.state.rect}
+      onMouseUp: function() {
+        var message = {type:'rect', rect:self.state.rect};
         ipcRenderer.send('asynchronous-message', JSON.stringify(message));
-        self.setState({ cropping: false, rect: {} })
+        self.setState({ cropping: false, rect: {} });
       },
-      onMouseDown: function (e) {
-        self.setState({ downPoint: { x: e.clientX, y: e.clientY }, cropping: true })
+      onMouseDown: function(e) {
+        self.setState({ downPoint: { x: e.clientX, y: e.clientY }, cropping: true });
       }
     }, [
       React.DOM.div(
@@ -71,10 +71,10 @@ const App = React.createClass({
         },
         React.DOM.div({ className: 'indicator'}, `${self.state.x}\n${self.state.y}`)
       )
-    ])
+    ]);
   }
-})
+});
 
-domready(function () {
-  React.render(React.createFactory(App)(), document.querySelector('body'))
-})
+domready(function() {
+  React.render(React.createFactory(App)(), document.querySelector('body'));
+});

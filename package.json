@@ -14,5 +14,8 @@
     "domready": "*",
     "electron-screenshot": "*",
     "aws-sdk": "*"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.35.1"
   }
 }

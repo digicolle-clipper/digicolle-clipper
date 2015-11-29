@@ -20,3 +20,4 @@ node_modules/
 debug.log
 npm-debug.log
 settings.js
+/tmp/

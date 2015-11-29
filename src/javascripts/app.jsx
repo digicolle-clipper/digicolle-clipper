@@ -13,8 +13,19 @@ class App extends React.Component {
     super(props);
     this.state = { cropMode: false, cropData: null };
     ipc.on('cropdata', (e, data) => {
-      this.setState({ cropData: data });
+      this.setState({
+        cropData: Object.assign({ data: data }, this.parseCurrentDocumentInfo())
+      });
     });
+  }
+
+  parseCurrentDocumentInfo() {
+    const d = document.getElementById('webview').contentDocument
+    const els = d.querySelectorAll('.detail-metadata-list dd');
+    return {
+      title: els[1].innerText,
+      description: ''
+    }
   }
 
   onClickClip() {
@@ -39,26 +50,26 @@ class App extends React.Component {
     this.setState({ cropData: null });
     ipc.send('crop', JSON.stringify(data));
   }
-  
+
   renderCropRect() {
     return this.state.cropMode ? <CropRect onCropEnd={this.onCropEnd.bind(this)} /> : false;
   }
-  
+
   render() {
     return (
       <div id="wrapper">
-	    <div id="menu-bar">
-	      <input type="text" id="url" defaultValue="http://dl.ndl.go.jp/"></input>
-	      <button className="btn-load">Load</button>
-	      <button className="btn-clip" onClick={this.onClickClip.bind(this)}>Clip</button>
-	    </div>
-	    <div id="webview_wrapper" className="webview">
-	      <iframe id="webview"
+        <div id="menu-bar">
+          <input type="text" id="url" defaultValue="http://dl.ndl.go.jp/"></input>
+          <button className="btn-load">Load</button>
+          <button className="btn-clip" onClick={this.onClickClip.bind(this)}>Clip</button>
+        </div>
+        <div id="webview_wrapper" className="webview">
+          <iframe id="webview"
                   src="http://dl.ndl.go.jp/info:ndljp/pid/909426"
                   style={ { display: 'inline-block', width: '100%', height: '100%' } }
           />
           {this.renderCropRect()}
-	    </div>
+        </div>
         <Modal data={this.state.cropData} onSubmit={this.onSubmitCrop.bind(this)} onCancel={this.onCancelCrop.bind(this)} />
       </div>
     );

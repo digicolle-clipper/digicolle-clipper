@@ -20,17 +20,16 @@ export default class CropConfirmModal extends React.Component {
   }
 
   onSubmit() {
-    this.props.onSubmit({
-      data: this.props.data,
-      description: this.state.description
-    });
+    this.props.onSubmit(Object.assign({}, this.props.data, { description: this.state.description }));
   }
 
   render() {
     const isOpen = !!this.props.data
+    if (!isOpen) return false;
     return (
       <Modal isOpen={isOpen}>
-        <div className="crop-thumbnail"><img src={this.props.data} /></div>
+        <div className="crop-thumbnail"><img src={this.props.data.data} /></div>
+        <div>{this.props.data.title}</div>
         <div><input onChange={this.onChange.bind(this)} /></div>
         <div>
           <button onClick={this.onCancel.bind(this)}>キャンセル</button>

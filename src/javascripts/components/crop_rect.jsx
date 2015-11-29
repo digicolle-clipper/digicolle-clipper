@@ -24,14 +24,14 @@ export default class CropRect extends React.Component {
   onMouseDown(e) {
     this.setState({
       cropping: true,
-      downPoint: { x: e.clientX, y: e.clientY - 40 }
+      downPoint: { x: e.clientX, y: e.clientY }
     });
   }
 
   onMouseMove(e) {
     this.setState({
       x: e.clientX,
-      y: e.clientY- 40
+      y: e.clientY
     });
 
     if (!this.state.cropping) return;
@@ -41,7 +41,7 @@ export default class CropRect extends React.Component {
         this.state.downPoint,
         {
           x: e.clientX,
-          y: e.clientY - 40
+          y: e.clientY
         }
       )
     });    
@@ -55,14 +55,14 @@ export default class CropRect extends React.Component {
   render() {
     const rectStyle = {
       left: this.state.rect.x,
-      top: this.state.rect.y,
+      top: this.state.rect.y - 40,
       width: this.state.rect.width,
       height: this.state.rect.height
     }
 
     const cursorStyle = {
       left: this.state.x,
-      top: this.state.y
+      top: this.state.y - 40
     }
     
     return (      

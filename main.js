@@ -49,9 +49,7 @@ ipcMain.on('measure', function(e, message) {
   var data = JSON.parse(message);
   const rect = data.rect;
   var windowPosition = mainWindow.getPosition();
-  rect.x -= windowPosition[0];
-  rect.y -= windowPosition[1];
-  mainWindow.capturePage(data.rect, function(img) {
+  mainWindow.capturePage(rect, function(img) {
     mainWindow.send('cropdata', img.toDataURL());
   });
 });

@@ -4,6 +4,7 @@
   "description": "",
   "main": "bootstrapper.js",
   "scripts": {
+    "start": "npm run build && electron .",
     "build": "browserify src/javascripts/app.jsx --debug --extension js --extension jsx -o public/bundle.js",
     "watch": "watchify src/javascripts/app.jsx --debug --extension js --extension jsx -o public/bundle.js -v",
     "test": "eslint src/javascripts"

@@ -26,7 +26,7 @@ class App extends React.Component {
     const id = d.querySelectorAll('.simple-metadata-list dd')[0].innerText;
     const tmp = id.split('/');
     return {
-      title: els[1].innerText,
+      title: els[1].innerText.trim(),
       description: '',
       segment: Number(d.querySelector('#sel-content-no option[selected="selected"]').innerText),
       pid: Number(tmp[tmp.length - 1])

@@ -9,6 +9,8 @@ var fs = require('fs');
 var ipcMain = require('electron').ipcMain;
 var AWS = require('aws-sdk');
 var settings = require('./settings');
+var request = require('request');
+
 AWS.config.accessKeyId = settings.aws_key;
 AWS.config.secretAccessKey = settings.aws_secret;
 var currentURL = null;
@@ -37,12 +39,13 @@ ipcMain.on('crop', (e, message) => {
   const img = nativeImage.createFromDataURL(data.data);
   console.log(data);
   fs.writeFile(`tmp/${+new Date()}.png`, img.toPng(), null);
-  // var upload = new AWS.S3.ManagedUpload({
-  //   params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
-  // });
-  // upload.send(function(err, data) {
-  //   console.log(err, data);
-  // }); 
+  var upload = new AWS.S3.ManagedUpload({
+    params: { Bucket: 'digicolle-clipper', Key: data.pid + '_' + Date.now() + '.png', Body: img.toPng() }
+  });
+  upload.send(function(err, data) {
+    if (err) return;
+    request.post(settings.endpoint + '/upload').form({ ndl_id: data.pid, photo: data.Location, description: data.description });
+  });
 });
 
 ipcMain.on('measure', function(e, message) {

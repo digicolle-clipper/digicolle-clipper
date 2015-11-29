@@ -72,7 +72,7 @@ class App extends React.Component {
         </div>
         <div id="webview_wrapper" className="webview">
           <iframe id="webview"
-                  src="http://dl.ndl.go.jp/info:ndljp/pid/909426"
+                  src="http://dl.ndl.go.jp/"
                   style={ { display: 'inline-block', width: '100%', height: '100%' } }
           />
           {this.renderCropRect()}

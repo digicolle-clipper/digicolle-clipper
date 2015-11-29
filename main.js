@@ -28,7 +28,7 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
   mainWindow = new BrowserWindow({ width: 1000, height: 600 });
   mainWindow.loadURL('file://' + __dirname + '/public/index.html');
-  mainWindow.openDevTools();
+  // mainWindow.openDevTools();
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
@@ -37,8 +37,6 @@ app.on('ready', function () {
 ipcMain.on('crop', (e, message) => {
   const data = JSON.parse(message);
   const img = nativeImage.createFromDataURL(data.data);
-  console.log(data);
-  fs.writeFile(`tmp/${+new Date()}.png`, img.toPng(), null);
   var upload = new AWS.S3.ManagedUpload({
     params: { Bucket: 'digicolle-clipper', Key: data.pid + '_' + Date.now() + '.png', Body: img.toPng() }
   });

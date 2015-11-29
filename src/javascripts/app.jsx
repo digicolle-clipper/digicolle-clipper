@@ -21,10 +21,15 @@ class App extends React.Component {
 
   parseCurrentDocumentInfo() {
     const d = document.getElementById('webview').contentDocument
+    d.querySelector('#sel-content-no option[selected="selected"]').innerText
     const els = d.querySelectorAll('.detail-metadata-list dd');
+    const id = d.querySelectorAll('.simple-metadata-list dd')[0].innerText;
+    const tmp = id.split('/');
     return {
       title: els[1].innerText,
-      description: ''
+      description: '',
+      segment: Number(d.querySelector('#sel-content-no option[selected="selected"]').innerText),
+      pid: Number(tmp[tmp.length - 1])
     }
   }
 

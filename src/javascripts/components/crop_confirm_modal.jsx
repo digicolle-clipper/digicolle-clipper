@@ -5,7 +5,7 @@ export default class CropConfirmModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: '',
+      description: ''
     }
   }
 
@@ -15,11 +15,13 @@ export default class CropConfirmModal extends React.Component {
     });
   }
 
-  onCancel() {
+  onCancel(e) {
+    e.preventDefault();
     this.props.onCancel();
   }
 
-  onSubmit() {
+  onSubmit(e) {
+    e.preventDefault();
     this.props.onSubmit(Object.assign({}, this.props.data, { description: this.state.description }));
   }
 
@@ -28,7 +30,7 @@ export default class CropConfirmModal extends React.Component {
     if (!isOpen) return false;
     return (
       <Modal isOpen={isOpen}>
-        <div className="crop-thumbnail"><img src={this.props.data.data} /></div>        
+        <div className="crop-thumbnail"><img src={this.props.data.data} /></div>
         <form className="form-horizontal">
           <div className="form-group">
             <label className="col-sm-2 control-label">タイトル</label>
@@ -40,6 +42,12 @@ export default class CropConfirmModal extends React.Component {
             <label className="col-sm-2 control-label">コメント</label>
             <div className="col-sm-10">
               <input className="form-control" onChange={this.onChange.bind(this)} />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-sm-2 control-label">コマ番号</label>
+            <div className="col-sm-10">
+              <p className="form-control-static">{this.props.data.segment}</p>
             </div>
           </div>
           <div className="form-group">

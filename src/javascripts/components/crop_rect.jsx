@@ -18,7 +18,7 @@ export default class CropRect extends React.Component {
       cropping: false,
       downPoint: {},
       rect: {}
-    };    
+    };
   }
 
   onMouseDown(e) {
@@ -33,47 +33,51 @@ export default class CropRect extends React.Component {
       x: e.clientX,
       y: e.clientY
     });
-
-    if (!this.state.cropping) return;
-
-    this.setState({
-      rect: createRect(
-        this.state.downPoint,
-        {
-          x: e.clientX,
-          y: e.clientY
-        }
-      )
-    });    
   }
 
   onMouseUp() {
-    this.props.onCropEnd(this.state.rect)
+    const rect = createRect(this.state.downPoint, { x: this.state.x, y: this.state.y });
+    this.props.onCropEnd(rect)
     this.setState({ cropping: false, rect: {} });
   }
-  
-  render() {
-    const rectStyle = {
-      left: this.state.rect.x,
-      top: this.state.rect.y - 40,
-      width: this.state.rect.width,
-      height: this.state.rect.height
-    }
 
+  renderGuide() {
     const cursorStyle = {
       left: this.state.x,
       top: this.state.y - 40
     }
-    
-    return (      
+    if (this.state.cropping) {
+      const rect = createRect(this.state.downPoint, { x: this.state.x, y: this.state.y });
+      const rectStyle = {
+        left: rect.x,
+        top: rect.y - 40,
+        width: rect.width,
+        height: rect.height
+      }
+      return (
+        <div>
+          <div className="rect" style={rectStyle} />
+          <div className="cursor" style={cursorStyle}>
+            <div className="indicator" />
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="cursor" style={cursorStyle}>
+          <div className="indicator" />
+        </div>
+      );
+    }
+  }
+
+  render() {
+    return (
       <div className="overlay"
            onMouseDown={this.onMouseDown.bind(this)}
            onMouseMove={this.onMouseMove.bind(this)}
            onMouseUp={this.onMouseUp.bind(this)} >
-        <div className="rect" style={rectStyle} />
-        <div className="cursor" style={cursorStyle}>
-          <div className="indicator" />
-        </div>
+        {this.renderGuide()}
       </div>
     );
   }

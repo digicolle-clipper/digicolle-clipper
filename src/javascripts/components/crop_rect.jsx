@@ -44,13 +44,13 @@ export default class CropRect extends React.Component {
   renderGuide() {
     const cursorStyle = {
       left: this.state.x,
-      top: this.state.y - 40
+      top: this.state.y - 30
     }
     if (this.state.cropping) {
       const rect = createRect(this.state.downPoint, { x: this.state.x, y: this.state.y });
       const rectStyle = {
         left: rect.x,
-        top: rect.y - 40,
+        top: rect.y - 30,
         width: rect.width,
         height: rect.height
       }

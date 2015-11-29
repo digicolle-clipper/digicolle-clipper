@@ -43,7 +43,10 @@ ipcMain.on('crop', (e, message) => {
     params: { Bucket: 'digicolle-clipper', Key: data.pid + '_' + Date.now() + '.png', Body: img.toPng() }
   });
   upload.send(function(err, data) {
-    if (err) return;
+    if (err) {
+      console.error(err);
+      return;
+    }
     request.post(settings.endpoint + '/upload').form({ ndl_id: data.pid, photo: data.Location, description: data.description });
   });
 });

@@ -21,3 +21,4 @@ debug.log
 npm-debug.log
 settings.js
 /tmp/
+/public/bundle.js

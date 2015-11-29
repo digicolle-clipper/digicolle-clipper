@@ -78,6 +78,3 @@ export default class CropRect extends React.Component {
     );
   }
 }
-
-CropRect.propTypes = { onCropEnd: React.PropTypes.func };
-CropRect.defaultProps = { onCropEnd: function() {} };

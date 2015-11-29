@@ -1,5 +1,8 @@
 "use babel";
 
+const electron = require('electron');
+const nativeImage = electron.nativeImage;
+
 var app = require('app');
 var BrowserWindow = require('browser-window');
 var fs = require('fs');
@@ -29,20 +32,26 @@ app.on('ready', function () {
   });
 });
 
-ipcMain.on('cropdata', function(e, message) {
+ipcMain.on('crop', (e, message) => {
+  const data = JSON.parse(message);
+  const img = nativeImage.createFromDataURL(data.data);
+  console.log(data);
+  fs.writeFile(`tmp/${+new Date()}.png`, img.toPng(), null);
+  // var upload = new AWS.S3.ManagedUpload({
+  //   params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
+  // });
+  // upload.send(function(err, data) {
+  //   console.log(err, data);
+  // }); 
+});
+
+ipcMain.on('measure', function(e, message) {
   var data = JSON.parse(message);
   const rect = data.rect;
   var windowPosition = mainWindow.getPosition();
   rect.x -= windowPosition[0];
   rect.y -= windowPosition[1];
   mainWindow.capturePage(data.rect, function(img) {
-    //mainWindow.send('clipstart', img.toDataURL());
-    // var upload = new AWS.S3.ManagedUpload({
-    //   params: {Bucket: 'digicolle-clipper', Key: id + '_' + Date.now() + '.png', Body: img.toPng()}
-    // });
-    // upload.send(function(err, data) {
-    //   console.log(err, data);
-    // });
-    fs.writeFile("test.png", img.toPng(), null);
+    mainWindow.send('cropdata', img.toDataURL());
   });
 });

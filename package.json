@@ -29,7 +29,8 @@
     "domready": "*",
     "electron-screenshot": "*",
     "react": "*",
-    "react-dom": "^0.14.3"
+    "react-dom": "^0.14.3",
+    "react-modal": "^0.6.1"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",

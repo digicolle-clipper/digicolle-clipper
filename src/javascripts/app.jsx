@@ -1,6 +1,9 @@
 import domready from 'domready';
 import React from 'react';
 import ReactDom from 'react-dom';
+
+import Modal from './components/crop_confirm_modal';
+import RModal from 'react-modal';
 import CropRect from './components/crop_rect';
 
 const ipc = global.require('electron').ipcRenderer;
@@ -8,21 +11,33 @@ const ipc = global.require('electron').ipcRenderer;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { cropMode: false };
+    this.state = { cropMode: false, cropData: null };
+    ipc.on('cropdata', (e, data) => {
+      this.setState({ cropData: data });
+    });
   }
 
   onClickClip() {
-    const url = document.getElementById('webview').getURL();
+    const url = document.getElementById('webview').contentDocument.location.href;
     if (!/^http:\/\/dl.ndl.go.jp\/info:ndljp\/pid\//.test(url)) return;
     this.setState({ cropMode: true });
   }
 
   onCropEnd(rect) {
-    ipc.send('cropdata', JSON.stringify({
+    this.setState({ cropMode: false });
+    ipc.send('measure', JSON.stringify({
       rect: rect,
       url: document.getElementById('webview').getURL()
     }));
-    this.setState({ cropMode: false });
+  }
+
+  onCancelCrop() {
+    this.setState({ cropData: null });
+  }
+
+  onSubmitCrop(data) {
+    this.setState({ cropData: null });
+    ipc.send('crop', JSON.stringify(data));
   }
   
   renderCropRect() {
@@ -38,14 +53,19 @@ class App extends React.Component {
 	      <button className="btn-clip" onClick={this.onClickClip.bind(this)}>Clip</button>
 	    </div>
 	    <div id="webview_wrapper" className="webview">
-	      <webview id="webview" src="http://dl.ndl.go.jp/" style={ { display: 'inline-block', width: '100%', height: '100%' } } />
+	      <iframe id="webview"
+                  src="http://dl.ndl.go.jp/info:ndljp/pid/909426"
+                  style={ { display: 'inline-block', width: '100%', height: '100%' } }
+          />
           {this.renderCropRect()}
 	    </div>
+        <Modal data={this.state.cropData} onSubmit={this.onSubmitCrop.bind(this)} onCancel={this.onCancelCrop.bind(this)} />
       </div>
     );
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  RModal.setAppElement(document.getElementById('container'));
   ReactDom.render(<App />, document.getElementById('container'));
 });

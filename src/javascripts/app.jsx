@@ -27,7 +27,7 @@ class App extends React.Component {
     this.setState({ cropMode: false });
     ipc.send('measure', JSON.stringify({
       rect: rect,
-      url: document.getElementById('webview').getURL()
+      url: document.getElementById('webview').contentDocument.location.href
     }));
   }
 

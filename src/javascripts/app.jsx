@@ -41,10 +41,12 @@ class App extends React.Component {
 
   onCropEnd(rect) {
     this.setState({ cropMode: false });
-    ipc.send('measure', JSON.stringify({
-      rect: rect,
-      url: document.getElementById('webview').contentDocument.location.href
-    }));
+    setTimeout(() => {
+      ipc.send('measure', JSON.stringify({
+        rect: rect,
+        url: document.getElementById('webview').contentDocument.location.href
+      }));
+    });
   }
 
   onCancelCrop() {

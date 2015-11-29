@@ -28,13 +28,27 @@ export default class CropConfirmModal extends React.Component {
     if (!isOpen) return false;
     return (
       <Modal isOpen={isOpen}>
-        <div className="crop-thumbnail"><img src={this.props.data.data} /></div>
-        <div>{this.props.data.title}</div>
-        <div><input onChange={this.onChange.bind(this)} /></div>
-        <div>
-          <button onClick={this.onCancel.bind(this)}>キャンセル</button>
-          <button onClick={this.onSubmit.bind(this)}>投稿</button>
-        </div>
+        <div className="crop-thumbnail"><img src={this.props.data.data} /></div>        
+        <form className="form-horizontal">
+          <div className="form-group">
+            <label className="col-sm-2 control-label">タイトル</label>
+            <div className="col-sm-10">
+              <p className="form-control-static">{this.props.data.title}</p>
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-sm-2 control-label">コメント</label>
+            <div className="col-sm-10">
+              <input className="form-control" onChange={this.onChange.bind(this)} />
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="col-sm-offset-2 col-sm-10">
+              <button className="btn btn-default" onClick={this.onCancel.bind(this)}>キャンセル</button>
+              <button className="btn btn-default" type ="submit" onClick={this.onSubmit.bind(this)}>投稿</button>
+            </div>
+          </div>
+        </form>
       </Modal>
     );
   }

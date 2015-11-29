@@ -8,6 +8,7 @@ var BrowserWindow = require('browser-window');
 var fs = require('fs');
 var ipcMain = require('electron').ipcMain;
 var AWS = require('aws-sdk');
+
 var settings = require('./settings');
 var request = require('request');
 

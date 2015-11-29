@@ -1,3 +1,4 @@
 exports.aws_key = 'X'
 exports.aws_secret = 'X'
 exports.aws_region = 'X'
+exports.endpoint = 'http://hoge'
